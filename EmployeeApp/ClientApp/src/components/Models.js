@@ -1,6 +1,6 @@
 ﻿export class PositionData {
-    guid = "";
+	guid = "00000000-0000-0000-0000-000000000000";
     name = "";
-    createDate = null;
+	createDate = new Date();
     updateDate = null;
 }

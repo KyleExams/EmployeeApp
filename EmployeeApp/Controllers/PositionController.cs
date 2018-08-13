@@ -40,7 +40,7 @@ namespace EmployeeApp.Controllers
 
         [Route("updateposition/{id}")]
         [HttpPut]
-        public IActionResult UpdatePosition(Guid id, Position position)
+        public IActionResult UpdatePosition(Guid id, [FromBody] Position position)
         {
             if (!ModelState.IsValid)
             {
@@ -67,8 +67,8 @@ namespace EmployeeApp.Controllers
                 }
                 else
                 {
-                    throw;
-                }
+					return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+				}
             }
 
             return Ok(0);
@@ -76,7 +76,7 @@ namespace EmployeeApp.Controllers
 
         [Route("createposition")]
         [HttpPost]
-        public IActionResult CreatePosition(Position position)
+        public IActionResult CreatePosition([FromBody] Position position)
         {
             if (!ModelState.IsValid)
             {
@@ -99,14 +99,14 @@ namespace EmployeeApp.Controllers
                 }
                 else
                 {
-                    throw;
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
             }
 
             return Ok(position);
         }
 
-        [Route("deleteposition")]
+        [Route("deleteposition/{id}")]
         [HttpDelete]
         public IActionResult DeletePosition(Guid id)
         {

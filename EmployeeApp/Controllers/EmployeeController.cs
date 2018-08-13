@@ -40,7 +40,7 @@ namespace EmployeeApp.Controllers
 
         [Route("updateemployee/{id}")]
         [HttpPut]
-        public IActionResult UpdateEmployee(Guid id, Employee employee)
+        public IActionResult UpdateEmployee(Guid id, [FromBody] Employee employee)
         {
             if (!ModelState.IsValid)
             {
@@ -67,8 +67,8 @@ namespace EmployeeApp.Controllers
                 }
                 else
                 {
-                    throw;
-                }
+					return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+				}
             }
 
             return Ok(0);
@@ -76,7 +76,7 @@ namespace EmployeeApp.Controllers
 
         [Route("createemployee")]
         [HttpPost]
-        public IActionResult CreateEmployee(Employee employee)
+        public IActionResult CreateEmployee([FromBody] Employee employee)
         {
             if (!ModelState.IsValid)
             {
@@ -99,14 +99,14 @@ namespace EmployeeApp.Controllers
                 }
                 else
                 {
-                    throw;
-                }
+					return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+				}
             }
 
             return Ok(employee);
         }
 
-        [Route("deleteemployee")]
+        [Route("deleteemployee/{id}")]
         [HttpDelete]
         public IActionResult DeleteEmployee(Guid id)
         {
