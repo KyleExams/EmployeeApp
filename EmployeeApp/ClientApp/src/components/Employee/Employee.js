@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import Pagination from "react-js-pagination";
 
 export class Employee extends Component {
-    displayName = Employee.name
+	displayName = Employee.name
 
 	constructor(props) {
 		super(props);
@@ -10,32 +11,34 @@ export class Employee extends Component {
 		this.state = {
 			employees: [],
 			selectedEmployee: "",
+			activePage: 1,
+			itemPerPage: 5,
 			loading: true,
 			redirectToAdd: false,
 			redirectToEdit: false
 		};
 
 		// method bindings
-        this.loadEmployees = this.loadEmployees.bind(this);
-        this.addEmployee = this.addEmployee.bind(this);
-        this.editEmployee = this.editEmployee.bind(this);
-        this.deleteEmployee = this.deleteEmployee.bind(this);
+		this.loadEmployees = this.loadEmployees.bind(this);
+		this.addEmployee = this.addEmployee.bind(this);
+		this.editEmployee = this.editEmployee.bind(this);
+		this.deleteEmployee = this.deleteEmployee.bind(this);
 
 		this.loadEmployees();
 	}
 
 	loadEmployees() {
-        fetch('api/Employee/getemployees', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then(response => response.json())
-        .then(data => {
-            console.log(data);
-            this.setState({ employees: data, loading: false });
-        });
+		fetch('api/Employee/getemployees', {
+			method: 'GET',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			}
+		}).then(response => response.json())
+		.then(data => {
+			//console.log(data);
+			this.setState({ employees: data, loading: false });
+		});
 	}
 
 	addEmployee(e) {
@@ -48,7 +51,7 @@ export class Employee extends Component {
 	}
 
 	deleteEmployee(guid) {
-        fetch('api/Employee/deleteemployee/' + guid, {
+		fetch('api/Employee/deleteemployee/' + guid, {
 			method: 'DELETE',
 			headers: {
 				'Accept': 'application/json',
@@ -59,36 +62,53 @@ export class Employee extends Component {
 		});
 	}
 
+	handlePageChange(pageNumber) {
+		this.setState({ activePage: pageNumber });
+	}
+
 	renderEmployeesTable(employees) {
+		let indexOfLast = this.state.activePage * this.state.itemPerPage;
+		let indexOfFirst = indexOfLast - this.state.itemPerPage;
+		let pagedEmployees = employees.slice(indexOfFirst, indexOfLast);
+
 		if (employees && employees.length > 0) {
 			return (
-				<table className='table table-striped'>
-					<thead>
-						<tr>
-							<th>ID</th>
-                            <th>Employee</th>
-                            <th>Position</th>
-							<th>Created</th>
-							<th>Updated</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{employees.map((employee) =>
-							<tr key={employee.guid}>
-								<td>{employee.guid}</td>
-                                <td>{employee.fullName}</td>
-                                <td>{employee.position.name}</td>
-								<td>{employee.createDate ? new Date(employee.createDate).toLocaleDateString() + ' ' + new Date(employee.createDate).toLocaleTimeString() : ''}</td>
-								<td>{employee.updateDate ? new Date(employee.updateDate).toLocaleDateString() + ' ' + new Date(employee.updateDate).toLocaleTimeString() : ''}</td>
-								<td>
-									<button type="button" className="btn btn-primary action-button" onClick={() => this.editEmployee(employee.guid)}>EDIT</button>
-									<button type="button" className="btn btn-danger action-button" onClick={() => this.deleteEmployee(employee.guid)}>DELETE</button>
-								</td>
+				<div>
+					<table className='table table-striped'>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Employee</th>
+								<th>Position</th>
+								<th>Created</th>
+								<th>Updated</th>
+								<th>Actions</th>
 							</tr>
-						)}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{pagedEmployees.map((employee) =>
+								<tr key={employee.guid}>
+									<td>{employee.guid}</td>
+									<td>{employee.fullName}</td>
+									<td>{employee.position.name}</td>
+									<td>{employee.createDate ? new Date(employee.createDate).toLocaleDateString() + ' ' + new Date(employee.createDate).toLocaleTimeString() : ''}</td>
+									<td>{employee.updateDate ? new Date(employee.updateDate).toLocaleDateString() + ' ' + new Date(employee.updateDate).toLocaleTimeString() : ''}</td>
+									<td>
+										<button type="button" className="btn btn-primary action-button" onClick={() => this.editEmployee(employee.guid)}>EDIT</button>
+										<button type="button" className="btn btn-danger action-button" onClick={() => this.deleteEmployee(employee.guid)}>DELETE</button>
+									</td>
+								</tr>
+							)}
+						</tbody>
+					</table>
+					<Pagination
+						activePage={this.state.activePage}
+						itemsCountPerPage={this.state.itemPerPage}
+						totalItemsCount={employees.length}
+						pageRangeDisplayed={5}
+						onChange={this.handlePageChange.bind(this)}
+						hideDisabled={true} />
+				</div>
 			);
 		} else {
 			return (

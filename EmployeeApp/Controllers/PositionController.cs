@@ -116,10 +116,17 @@ namespace EmployeeApp.Controllers
                 return NotFound();
             }
 
-            _employeeContext.Positions.Remove(position);
-            _employeeContext.SaveChanges();
+			try
+			{
+				_employeeContext.Positions.Remove(position);
+				_employeeContext.SaveChanges();
+			}
+			catch (DbUpdateException ex)
+			{
+				return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+			}
 
-            return Ok(0);
+			return Ok(0);
         }
 
         private bool PositionExists(Guid id)

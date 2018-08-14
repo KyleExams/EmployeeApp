@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
+import Pagination from "react-js-pagination";
+import { toast } from 'react-toastify';
 
 export class Position extends Component {
 	displayName = Position.name
@@ -10,6 +12,8 @@ export class Position extends Component {
 		this.state = {
 			positions: [],
 			selectedPosition: "",
+			activePage: 1,
+			itemPerPage: 5,
 			loading: true,
 			redirectToAdd: false,
 			redirectToEdit: false
@@ -49,39 +53,65 @@ export class Position extends Component {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			}
+		}).then((response) => {
+			if (!response.ok) {
+				console.log(response);
+				throw Error(response.statusText);
+			}
+			return response;
 		}).then(() => {
 			this.loadPositions();
+		}).catch((error) => {
+			toast.error(error.toString());
 		});
 	}
 
+	handlePageChange(pageNumber) {
+		this.setState({ activePage: pageNumber });
+	}
+
+	// table and pagination sample
 	renderPositionsTable(positions) {
+		let indexOfLast = this.state.activePage * this.state.itemPerPage;
+		let indexOfFirst = indexOfLast - this.state.itemPerPage;
+		let pagedPositions = positions.slice(indexOfFirst, indexOfLast);
+
 		if (positions && positions.length > 0) {
 			return (
-				<table className='table table-striped'>
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Position</th>
-							<th>Created</th>
-							<th>Updated</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{positions.map((position) =>
-							<tr key={position.guid}>
-								<td>{position.guid}</td>
-								<td>{position.name}</td>
-								<td>{position.createDate ? new Date(position.createDate).toLocaleDateString() + ' ' + new Date(position.createDate).toLocaleTimeString() : ''}</td>
-								<td>{position.updateDate ? new Date(position.updateDate).toLocaleDateString() + ' ' + new Date(position.updateDate).toLocaleTimeString() : ''}</td>
-								<td>
-									<button type="button" className="btn btn-primary action-button" onClick={() => this.editPosition(position.guid)}>EDIT</button>
-									<button type="button" className="btn btn-danger action-button" onClick={() => this.deletePosition(position.guid)}>DELETE</button>
-								</td>
+				<div>
+					<table className='table table-striped'>
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Position</th>
+								<th>Created</th>
+								<th>Updated</th>
+								<th>Actions</th>
 							</tr>
-						)}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{pagedPositions.map((position) =>
+								<tr key={position.guid}>
+									<td>{position.guid}</td>
+									<td>{position.name}</td>
+									<td>{position.createDate ? new Date(position.createDate).toLocaleDateString() + ' ' + new Date(position.createDate).toLocaleTimeString() : ''}</td>
+									<td>{position.updateDate ? new Date(position.updateDate).toLocaleDateString() + ' ' + new Date(position.updateDate).toLocaleTimeString() : ''}</td>
+									<td>
+										<button type="button" className="btn btn-primary action-button" onClick={() => this.editPosition(position.guid)}>EDIT</button>
+										<button type="button" className="btn btn-danger action-button" onClick={() => this.deletePosition(position.guid)}>DELETE</button>
+									</td>
+								</tr>
+							)}
+						</tbody>
+					</table>
+					<Pagination
+						activePage={this.state.activePage}
+						itemsCountPerPage={this.state.itemPerPage}
+						totalItemsCount={positions.length}
+						pageRangeDisplayed={5}
+						onChange={this.handlePageChange.bind(this)}
+						hideDisabled={true} />
+				</div>
 			);
 		} else {
 			return (

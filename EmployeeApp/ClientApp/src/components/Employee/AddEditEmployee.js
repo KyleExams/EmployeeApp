@@ -55,7 +55,7 @@ export class AddEditEmployee extends Component {
 		//console.log(this.state.employee);
 
 		if (this.state.isEdit) {
-			fetch('api/Employee/updateempployee/' + this.state.selectedEmployee, {
+			fetch('api/Employee/updateemployee/' + this.state.selectedEmployee, {
 				method: 'PUT',
 				headers: {
 					'Accept': 'application/json',
@@ -100,14 +100,14 @@ export class AddEditEmployee extends Component {
 
 	// dirty tracking sample
 	validateForm() {
-		//console.log(this.state.employee);
+		console.log(this.state.employee);
 		let valid = this.state.isEdit ?
-			this.state.pristineEmployee.fullName !== this.state.employee.fullName &&
-			this.state.pristineEmployee.positionGuid !== this.state.employee.positionGuid &&
-			this.state.employee.fullName !== "" && this.state.employee.positionGuid !== "-1"
+			(this.state.pristineEmployee.fullName !== this.state.employee.fullName ||
+			this.state.pristineEmployee.positionGuid !== this.state.employee.positionGuid) &&
+			this.state.employee.fullName !== "" && this.state.employee.positionGuid !== "00000000-0000-0000-0000-000000000000"
 			:
-			this.state.employee.fullName !== "" && this.state.employee.positionGuid !== "-1";
-		//console.log(valid);
+			this.state.employee.fullName !== "" && this.state.employee.positionGuid !== "00000000-0000-0000-0000-000000000000";
+		console.log(valid);
 		this.setState({ isFormValid: valid });
 	}
 
@@ -129,8 +129,10 @@ export class AddEditEmployee extends Component {
 					</div>
 					<div className="form-group">
 						<label htmlFor="employeePosition">Position</label>
-						<select className="form-control" id="employeePosition" onChange={this.handlePositionChange.bind(this)}>
-							<option value="-1">-- Select Position --</option>
+						<select className="form-control" id="employeePosition"
+							onChange={this.handlePositionChange.bind(this)}
+							value={this.state.employee.positionGuid}>
+							<option value="00000000-0000-0000-0000-000000000000">-- Select Position --</option>
 							{positions.map((position) =>
 								<option key={position.guid} value={position.guid}>{position.name}</option>
 							)}
