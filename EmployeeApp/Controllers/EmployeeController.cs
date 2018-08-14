@@ -22,14 +22,18 @@ namespace EmployeeApp.Controllers
         [HttpGet]
         public IActionResult GetEmployees()
         {
-            return Ok(_employeeContext.Employee.OrderByDescending(o => o.CreateDate));
+            var result = _employeeContext.Employees
+                .Include(emp => emp.Position)
+                .OrderByDescending(o => o.CreateDate);
+            
+            return Ok(result);
         }
 
         [Route("getemployee/{id}")]
         [HttpGet]
         public IActionResult GetEmployee(Guid id)
         {
-            Employee employee = _employeeContext.Employee.Find(id);
+            Employee employee = _employeeContext.Employees.Find(id);
             if (employee == null)
             {
                 return NotFound();
@@ -85,7 +89,7 @@ namespace EmployeeApp.Controllers
 
             employee.Guid = Guid.NewGuid();
             employee.CreateDate = DateTime.Now;
-            _employeeContext.Employee.Add(employee);
+            _employeeContext.Employees.Add(employee);
 
             try
             {
@@ -110,13 +114,13 @@ namespace EmployeeApp.Controllers
         [HttpDelete]
         public IActionResult DeleteEmployee(Guid id)
         {
-            Employee employee = _employeeContext.Employee.Find(id);
+            Employee employee = _employeeContext.Employees.Find(id);
             if (employee == null)
             {
                 return NotFound();
             }
 
-            _employeeContext.Employee.Remove(employee);
+            _employeeContext.Employees.Remove(employee);
             _employeeContext.SaveChanges();
 
             return Ok(0);
@@ -124,7 +128,7 @@ namespace EmployeeApp.Controllers
 
         private bool EmployeeExists(Guid id)
         {
-            return _employeeContext.Employee.Count(e => e.Guid == id) > 0;
+            return _employeeContext.Employees.Count(e => e.Guid == id) > 0;
         }
     }
 }

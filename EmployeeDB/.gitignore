@@ -2,3 +2,5 @@
 /Import Schema Logs
 /obj
 *.user
+*.dbmdl
+*jfm

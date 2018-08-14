@@ -4,3 +4,17 @@
         padding-top: 50px;
     }
 }
+
+.action-button,
+.add-edit-button {
+    margin: 2px;
+}
+
+.header {
+    float: left;
+}
+
+.add-button {
+    margin-left: 20px;
+    margin-top: 20px;
+}

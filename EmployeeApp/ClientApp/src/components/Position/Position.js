@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import './Position.css';
 
 export class Position extends Component {
 	displayName = Position.name

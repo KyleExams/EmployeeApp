@@ -15,8 +15,8 @@ namespace EmployeeApp.Models
         {
         }
 
-        public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<Position> Position { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Position> Positions { get; set; }
 
 //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //        {
@@ -47,11 +47,13 @@ namespace EmployeeApp.Models
 
                 entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 
-                entity.HasOne(d => d.PositionGu)
+                entity.HasOne(d => d.Position)
                     .WithMany(p => p.Employee)
                     .HasForeignKey(d => d.PositionGuid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Employee_Position");
+
+                entity.ToTable("Employee");
             });
 
             modelBuilder.Entity<Position>(entity =>
@@ -69,6 +71,8 @@ namespace EmployeeApp.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.UpdateDate).HasColumnType("datetime");
+
+                entity.ToTable("Position");
             });
         }
     }

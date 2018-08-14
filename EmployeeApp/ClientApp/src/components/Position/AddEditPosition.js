@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { PositionData } from '../Models';
 import { Redirect } from 'react-router-dom';
-import './AddEditPosition.css';
 
 export class AddEditPosition extends Component {
 	displayName = AddEditPosition.name
@@ -89,7 +88,7 @@ export class AddEditPosition extends Component {
 		this.setState({ isFormValid: valid });
 	}
 
-	renderAddEditPositionForm(position) {
+	renderAddEditPositionForm() {
 		return (
 			<div>
 				<form onSubmit={this.savePosition} >
@@ -116,7 +115,7 @@ export class AddEditPosition extends Component {
 	render() {
 		let contents = this.state.loading
 			? <p><em>Loading...</em></p>
-			: this.renderAddEditPositionForm(this.state.position);
+			: this.renderAddEditPositionForm();
 		let redirectToPosition = this.state.redirectToPosition;
 
 		if (redirectToPosition) {

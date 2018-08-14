@@ -22,14 +22,14 @@ namespace EmployeeApp.Controllers
         [HttpGet]
         public IActionResult GetPositions()
         {
-            return Ok(_employeeContext.Position.OrderByDescending(o => o.CreateDate));
+            return Ok(_employeeContext.Positions.OrderByDescending(o => o.CreateDate));
         }
 
         [Route("getposition/{id}")]
         [HttpGet]
         public IActionResult GetPosition(Guid id)
         {
-            Position position = _employeeContext.Position.Find(id);
+            Position position = _employeeContext.Positions.Find(id);
             if (position == null)
             {
                 return NotFound();
@@ -85,7 +85,7 @@ namespace EmployeeApp.Controllers
 
             position.Guid = Guid.NewGuid();
             position.CreateDate = DateTime.Now;
-            _employeeContext.Position.Add(position);
+            _employeeContext.Positions.Add(position);
 
             try
             {
@@ -110,13 +110,13 @@ namespace EmployeeApp.Controllers
         [HttpDelete]
         public IActionResult DeletePosition(Guid id)
         {
-            Position position = _employeeContext.Position.Find(id);
+            Position position = _employeeContext.Positions.Find(id);
             if (position == null)
             {
                 return NotFound();
             }
 
-            _employeeContext.Position.Remove(position);
+            _employeeContext.Positions.Remove(position);
             _employeeContext.SaveChanges();
 
             return Ok(0);
@@ -124,7 +124,7 @@ namespace EmployeeApp.Controllers
 
         private bool PositionExists(Guid id)
         {
-            return _employeeContext.Position.Count(e => e.Guid == id) > 0;
+            return _employeeContext.Positions.Count(e => e.Guid == id) > 0;
         }
     }
 }

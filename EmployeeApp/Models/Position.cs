@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace EmployeeApp.Models
@@ -15,6 +16,7 @@ namespace EmployeeApp.Models
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
+        [JsonIgnore]
         public ICollection<Employee> Employee { get; set; }
     }
 }
