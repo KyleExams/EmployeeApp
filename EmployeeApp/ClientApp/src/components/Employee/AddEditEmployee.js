@@ -112,6 +112,7 @@ export class AddEditEmployee extends Component {
 	}
 
 	renderAddEditEmployeeForm(positions) {
+		let dropdownDefault = positions.length <= 0 ? '-- No Positions available, please add a Position first --' : '-- Select Position --';
 		return (
 			<div>
 				<form onSubmit={this.saveEmployee} >
@@ -132,7 +133,7 @@ export class AddEditEmployee extends Component {
 						<select className="form-control" id="employeePosition"
 							onChange={this.handlePositionChange.bind(this)}
 							value={this.state.employee.positionGuid}>
-							<option value="00000000-0000-0000-0000-000000000000">-- Select Position --</option>
+							<option value="00000000-0000-0000-0000-000000000000">{dropdownDefault}</option>
 							{positions.map((position) =>
 								<option key={position.guid} value={position.guid}>{position.name}</option>
 							)}
