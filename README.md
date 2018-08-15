@@ -16,7 +16,7 @@ Technologies (excluding dependencies):
 How to use:
 <ol>	
   <li>Install node.js on machine (if not already installed)</li>
-  <li>Change directory to the EmployeeApp/ClientApp folder of the project with the package.json file</li>
+  <li>In command prompt, change directory to the EmployeeApp/ClientApp folder of the project with the package.json file</li>
   <li>Run 'npm install'</li>  
   <li>Open solution in Visual Studio 2017</li>
   <li>Right click the EmployeeDB SQL Database Project and click Publish</li>
