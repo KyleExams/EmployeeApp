@@ -23,5 +23,5 @@ How to use:
   <li>Follow instructions and make sure SQL Server instance is running (<i>Make sure name of database to be created is EmployeeDB, and in Advanced Publish Settings, check Always re-create database option</i>)</li>
   <li>Once done, there should be a new database EmployeeDB with Employee and Position tables in it in the SQL Server instance</li>
   <li>Build solution</li>  
-  <li>Set the EmployeeApp project as the startup project, then run the application (or alternatively, go to the root of the app in command prompt and run 'dotnet run')</li>
+  <li>Set the EmployeeApp project as the startup project, then run the application (or alternatively, go to the EmployeeApp folder in command prompt and run 'dotnet run' and leave it running, then visit the localhost page described)</li>
 </ol>
